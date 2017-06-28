@@ -1,6 +1,6 @@
-drop table idl_template_dim;
+drop table idl_msg_template_info_dim;
 
-CREATE TABLE idl_template_dim
+CREATE TABLE idl_msg_template_info_dim
 (tmp_id             STRING COMMENT '模板id',
 signature           STRING COMMENT '模板签名',
 tmp_type            STRING COMMENT '最可能的类型',
@@ -18,10 +18,10 @@ MAP KEYS TERMINATED BY '\072'
 STORED AS TEXTFILE;
 
 -- 线上
-ALTER TABLE idl_template_dim DROP PARTITION(ds <= "{p3}" );
-ALTER TABLE idl_template_dim DROP PARTITION(ds = "{p0}" );
+ALTER TABLE idl_msg_template_info_dim DROP PARTITION(ds <= "{p3}" );
+ALTER TABLE idl_msg_template_info_dim DROP PARTITION(ds = "{p0}" );
 
-INSERT INTO idl_template_dim PARTITION (ds="{p0}")
+INSERT INTO idl_msg_template_info_dim PARTITION (ds="{p0}")
 SELECT
 tmp_id,
 signature,
@@ -31,7 +31,7 @@ type_prob_map,
 tmp_industry,
 industry_prob,
 industry_prob_map
-FROM idl_template_tmp
+FROM idl_msg_template_info_tmp
 WHERE ds = "{p0}"
 UNION ALL
 SELECT
@@ -45,12 +45,12 @@ t0.industry_prob,
 t0.industry_prob_map
 FROM 
     (SELECT * 
-    FROM idl_template_dim
+    FROM idl_msg_template_info_dim
     WHERE ds = "{p2}"
     ) t0
 LEFT JOIN 
     (SELECT * 
-    FROM idl_template_tmp
+    FROM idl_msg_template_info_tmp
     WHERE ds = "{p0}"
     ) t1
 ON t0.tmp_id=t1.tmp_id

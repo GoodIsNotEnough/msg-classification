@@ -1,6 +1,6 @@
-drop table idl_template_tmp;
+drop table idl_msg_template_info_tmp;
 
-CREATE TABLE idl_template_tmp
+CREATE TABLE idl_msg_template_info_tmp
 (tmp_id             STRING COMMENT '模板id',
 signature           STRING COMMENT '模板签名',
 tmp_type            STRING COMMENT '最可能的类型',
@@ -18,9 +18,9 @@ MAP KEYS TERMINATED BY '\072'
 STORED AS TEXTFILE;
 
 -- 线上
-ALTER TABLE idl_template_tmp DROP PARTITION(ds <= "2017-06-22" );
+ALTER TABLE idl_msg_template_info_tmp DROP PARTITION(ds <= "2017-06-22" );
 
-INSERT INTO idl_template_tmp PARTITION (ds="2017-06-22")
+INSERT INTO idl_msg_template_info_tmp PARTITION (ds="2017-06-22")
 SELECT
 t012.tmp_id,
 t012.signature,
@@ -50,7 +50,7 @@ FROM
     category,
     probability,
     row_number() over (PARTITION BY tmp_id ORDER BY probability desc) AS rn
-    FROM idl_template_score_tmp
+    FROM idl_msg_template_score_tmp
     WHERE ds = "2017-06-22" 
     AND dimension='类型'
     ) t0
@@ -60,7 +60,7 @@ LEFT JOIN
     (SELECT
     tmp_id,
     str_to_map(concat_ws("\073",collect_list(concat_ws('\072', category,CAST(probability AS STRING)))),"\073","\072") AS prob_map
-    FROM idl_template_score_tmp
+    FROM idl_msg_template_score_tmp
     WHERE ds = "2017-06-22" 
     AND dimension='类型'
     GROUP BY tmp_id
@@ -84,7 +84,7 @@ FROM
     category,
     probability,
     row_number() over (PARTITION BY tmp_id ORDER BY probability desc) AS rn
-    FROM idl_template_score_tmp
+    FROM idl_msg_template_score_tmp
     WHERE ds = "2017-06-22" 
     AND dimension='行业'
     ) s0
@@ -94,7 +94,7 @@ LEFT JOIN
     (SELECT
     tmp_id,
     str_to_map(concat_ws("\073",collect_list(concat_ws('\072', category,CAST(probability AS STRING)))),"\073","\072") AS prob_map
-    FROM idl_template_score_tmp
+    FROM idl_msg_template_score_tmp
     WHERE ds = "2017-06-22" 
     AND dimension='行业'
     GROUP BY tmp_id

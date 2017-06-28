@@ -1,7 +1,6 @@
-ALTER TABLE idl_template_raw_score_tmp RENAME TO idl_template_raw_score_tmp;
+drop table idl_msg_template_raw_score_tmp;
 
-drop table idl_template_raw_score_tmp;
-CREATE TABLE idl_template_raw_score_tmp
+CREATE TABLE idl_msg_template_raw_score_tmp
 (tmp_id   STRING COMMENT '模板id',
 signature STRING COMMENT '模板签名',
 dimension STRING COMMENT '维度:类型,行业',
@@ -17,8 +16,8 @@ STORED AS TEXTFILE;
 add jar hdfs://172.31.9.255:9000/user/dc/func/hive-third-functions-2.1.1-shaded.jar;
 create temporary function array_concat as 'cc.shanruifeng.functions.array.UDFArrayConcat';
 
-ALTER TABLE idl_template_raw_score_tmp DROP PARTITION(ds <= "{p0}" );
-INSERT INTO idl_template_raw_score_tmp PARTITION (ds="{p0}")
+ALTER TABLE idl_msg_template_raw_score_tmp DROP PARTITION(ds <= "{p0}" );
+INSERT INTO idl_msg_template_raw_score_tmp PARTITION (ds="{p0}")
 SELECT
 t3.tmp_id,
 t3.signature,
@@ -59,8 +58,8 @@ ON t3.category=t4.category;
 add jar hdfs://172.31.9.255:9000/user/dc/func/hive-third-functions-2.1.1-shaded.jar;
 create temporary function array_concat as 'cc.shanruifeng.functions.array.UDFArrayConcat';
 
-ALTER TABLE idl_template_raw_score_tmp DROP PARTITION(ds <= "2017-06-22" );
-INSERT INTO idl_template_raw_score_tmp PARTITION (ds="2017-06-22")
+ALTER TABLE idl_msg_template_raw_score_tmp DROP PARTITION(ds <= "2017-06-22" );
+INSERT INTO idl_msg_template_raw_score_tmp PARTITION (ds="2017-06-22")
 SELECT
 t3.tmp_id,
 t3.signature,

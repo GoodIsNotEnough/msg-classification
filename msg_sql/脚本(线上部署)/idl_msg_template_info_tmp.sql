@@ -1,6 +1,6 @@
-ALTER TABLE idl_template_tmp DROP PARTITION(ds <= "{p0}" );
+ALTER TABLE idl_msg_template_info_tmp DROP PARTITION(ds <= "{p0}" );
 
-INSERT INTO idl_template_tmp PARTITION (ds="{p0}")
+INSERT INTO idl_msg_template_info_tmp PARTITION (ds="{p0}")
 SELECT
 t012.tmp_id,
 t012.signature,
@@ -30,7 +30,7 @@ FROM
     category,
     probability,
     row_number() over (PARTITION BY tmp_id ORDER BY probability desc) AS rn
-    FROM idl_template_score_tmp
+    FROM idl_msg_template_score_tmp
     WHERE ds = "{p0}" 
     AND dimension='类型'
     ) t0
@@ -40,7 +40,7 @@ LEFT JOIN
     (SELECT
     tmp_id,
     str_to_map(concat_ws("\073",collect_list(concat_ws('\072', category,CAST(probability AS STRING)))),"\073","\072") AS prob_map
-    FROM idl_template_score_tmp
+    FROM idl_msg_template_score_tmp
     WHERE ds = "{p0}" 
     AND dimension='类型'
     GROUP BY tmp_id
@@ -64,7 +64,7 @@ FROM
     category,
     probability,
     row_number() over (PARTITION BY tmp_id ORDER BY probability desc) AS rn
-    FROM idl_template_score_tmp
+    FROM idl_msg_template_score_tmp
     WHERE ds = "{p0}" 
     AND dimension='行业'
     ) s0
@@ -74,7 +74,7 @@ LEFT JOIN
     (SELECT
     tmp_id,
     str_to_map(concat_ws("\073",collect_list(concat_ws('\072', category,CAST(probability AS STRING)))),"\073","\072") AS prob_map
-    FROM idl_template_score_tmp
+    FROM idl_msg_template_score_tmp
     WHERE ds = "{p0}" 
     AND dimension='行业'
     GROUP BY tmp_id

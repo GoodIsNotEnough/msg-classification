@@ -1,6 +1,6 @@
-drop table idl_signature_dim;
+drop table idl_msg_signature_info_dim;
 
-CREATE TABLE idl_signature_dim
+CREATE TABLE idl_msg_signature_info_dim
 (signature          STRING COMMENT  '短信签名',
 sig_industry        STRING  COMMENT '行业',
 ave_prob            FLOAT COMMENT   '平均得分',
@@ -13,10 +13,10 @@ ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 STORED AS TEXTFILE;
 
 -- 线上
-ALTER TABLE idl_signature_dim DROP PARTITION(ds <= "{p3}" );
-ALTER TABLE idl_signature_dim DROP PARTITION(ds = "{p0}" );
+ALTER TABLE idl_msg_signature_info_dim DROP PARTITION(ds <= "{p3}" );
+ALTER TABLE idl_msg_signature_info_dim DROP PARTITION(ds = "{p0}" );
 
-INSERT INTO idl_signature_dim PARTITION (ds="{p0}")
+INSERT INTO idl_msg_signature_info_dim PARTITION (ds="{p0}")
 SELECT 
 t2.signature,
 t2.sig_industry, 
@@ -34,7 +34,7 @@ FROM
     sig_industry, 
     ave_prob,  
     row_number() over (PARTITION BY signature ORDER BY ave_prob desc) AS rn
-    FROM idl_signature_score_agg
+    FROM idl_msg_signature_score_agg
     WHERE ds = "{p0}"
     ) t1
 WHERE t1.rn=1
@@ -50,7 +50,7 @@ FROM
     sig_industry, 
     ave_prob,  
     row_number() over (PARTITION BY signature ORDER BY ave_prob desc) AS rn
-    FROM idl_signature_score_agg
+    FROM idl_msg_signature_score_agg
     WHERE ds = "{p0}"
     ) s1
 WHERE s1.rn=2

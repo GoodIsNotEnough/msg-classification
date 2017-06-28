@@ -1,6 +1,6 @@
-drop table idl_receiver_info_agg;
+drop table idl_msg_receiver_info_agg;
 
-CREATE TABLE if not exists idl_receiver_info_agg
+CREATE TABLE if not exists idl_msg_receiver_info_agg
 (
 mobile_no       STRING COMMENT '收信人手机号',
 recent_status   STRING COMMENT '最近号码状态 1:空号 2:关机停机 6:黑名单 0:其他',
@@ -21,9 +21,9 @@ COLLECTION ITEMS TERMINATED BY '\073'
 MAP KEYS TERMINATED BY '\072'
 STORED AS TEXTFILE;
 
-ALTER TABLE idl_receiver_info_agg DROP PARTITION(ds <= "{p3}" );
-ALTER TABLE idl_receiver_info_agg DROP PARTITION (ds="{p0}");
-INSERT INTO idl_receiver_info_agg PARTITION (ds="{p0}")
+ALTER TABLE idl_msg_receiver_info_agg DROP PARTITION(ds <= "{p3}" );
+ALTER TABLE idl_msg_receiver_info_agg DROP PARTITION (ds="{p0}");
+INSERT INTO idl_msg_receiver_info_agg PARTITION (ds="{p0}")
 SELECT
 t1.mobile_no,
 t3.receive_code AS recent_status,
@@ -46,7 +46,7 @@ FROM
     collect_set(match_map['name']) name_list,
     collect_set(match_map['gender']) gender_list,
     collect_set(match_map['email']) email_list
-    FROM idl_received_msg_join_log
+    FROM idl_msg_received_join_log
     group by mobile_no
     ) t1
 LEFT JOIN 
@@ -58,7 +58,7 @@ LEFT JOIN
         mobile_no,
         receive_code,
         row_number() over (PARTITION BY mobile_no ORDER BY create_time desc) AS rn
-        FROM idl_received_msg_join_log
+        FROM idl_msg_received_join_log
         ) t2
     WHERE rn=1
     ) t3
@@ -72,7 +72,7 @@ LEFT JOIN
         mobile_no,
         msg_type,
         count(1) type_num
-        FROM idl_received_msg_join_log
+        FROM idl_msg_received_join_log
         group by mobile_no,msg_type
         ) t4
     group by mobile_no
@@ -87,7 +87,7 @@ LEFT JOIN
         mobile_no,
         msg_industry,
         count(1) msg_industry_num
-        FROM idl_received_msg_join_log
+        FROM idl_msg_received_join_log
         group by mobile_no,msg_industry
         ) t6
     group by mobile_no

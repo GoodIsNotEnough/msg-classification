@@ -1,7 +1,7 @@
-ALTER TABLE idl_template_dim DROP PARTITION(ds <= "{p3}" );
-ALTER TABLE idl_template_dim DROP PARTITION(ds = "{p0}" );
+ALTER TABLE idl_msg_template_info_dim DROP PARTITION(ds <= "{p3}" );
+ALTER TABLE idl_msg_template_info_dim DROP PARTITION(ds = "{p0}" );
 
-INSERT INTO idl_template_dim PARTITION (ds="{p0}")
+INSERT INTO idl_msg_template_info_dim PARTITION (ds="{p0}")
 SELECT
 tmp_id,
 signature,
@@ -25,12 +25,12 @@ t0.industry_prob,
 t0.industry_prob_map
 FROM 
     (SELECT * 
-    FROM idl_template_dim
+    FROM idl_msg_template_info_dim
     WHERE ds = "{p2}"
     ) t0
 LEFT JOIN 
     (SELECT * 
-    FROM idl_template_tmp
+    FROM idl_msg_template_info_tmp
     WHERE ds = "{p0}"
     ) t1
 ON t0.tmp_id=t1.tmp_id

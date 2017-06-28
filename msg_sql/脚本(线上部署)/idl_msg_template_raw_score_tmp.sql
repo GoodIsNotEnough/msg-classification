@@ -1,8 +1,8 @@
 add jar hdfs://172.31.9.255:9000/user/dc/func/hive-third-functions-2.1.1-shaded.jar;
 create temporary function array_concat as 'cc.shanruifeng.functions.array.UDFArrayConcat';
 
-ALTER TABLE idl_template_raw_score_tmp DROP PARTITION(ds <= "{p0}" );
-INSERT INTO idl_template_raw_score_tmp PARTITION (ds="{p0}")
+ALTER TABLE idl_msg_template_raw_score_tmp DROP PARTITION(ds <= "{p0}" );
+INSERT INTO idl_msg_template_raw_score_tmp PARTITION (ds="{p0}")
 SELECT
 t3.tmp_id,
 t3.signature,

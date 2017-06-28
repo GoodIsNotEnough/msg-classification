@@ -1,6 +1,6 @@
-drop table idl_received_msg_join_log;
+drop table idl_msg_received_join_log;
 
-CREATE TABLE if not exists idl_received_msg_join_log
+CREATE TABLE if not exists idl_msg_received_join_log
 (
 id              STRING COMMENT '短信id',
 mobile_no       STRING COMMENT '收信人手机号码',
@@ -21,8 +21,8 @@ MAP KEYS TERMINATED BY '\072'
 STORED AS TEXTFILE;
 
 -- 当从表中查询出结果又插入该表时，则使用如下方式
-ALTER TABLE idl_received_msg_join_log DROP PARTITION(ds = "{p0}" );
-ALTER TABLE idl_received_msg_join_log DROP PARTITION(ds="{p0}");
+ALTER TABLE idl_msg_received_join_log DROP PARTITION(ds = "{p0}" );
+ALTER TABLE idl_msg_received_join_log DROP PARTITION(ds="{p0}");
 FROM
 (SELECT 
 st2.id,
@@ -49,13 +49,13 @@ FROM
         ) t1
     LEFT JOIN 
         (SELECT *
-        FROM idl_template_dim
+        FROM idl_msg_template_info_dim
         WHERE ds="{p0}"
         ) t2
     ON t1.tmp_id=t2.tmp_id
     LEFT JOIN 
         (SELECT *
-        FROM idl_signature_dim
+        FROM idl_msg_signature_info_dim
         WHERE ds="{p0}"
         ) t3
     ON t1.signature=t3.signature
@@ -70,17 +70,17 @@ LEFT JOIN
     s1.create_time
    FROM
      (SELECT *
-      FROM idl_received_msg_log
+      FROM idl_msg_received_log
       WHERE ds>="{p3}"
       ) s1
-   LEFT JOIN idl_received_msg_join_log s2 
+   LEFT JOIN idl_msg_received_join_log s2 
    ON s1.id=s2.id
    WHERE s2.id IS NULL
    ) st2
 ON st1.msg_id=st2.msg_id
 WHERE st2.msg_id IS NOT NULL
 ) AS t
-INSERT INTO idl_received_msg_join_log PARTITION (ds="{p0}")
+INSERT INTO idl_msg_received_join_log PARTITION (ds="{p0}")
 SELECT 
 id,
 mobile_no,

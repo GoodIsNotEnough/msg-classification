@@ -1,4 +1,4 @@
-ALTER TABLE adl_sms_content_input DROP PARTITION(ds="{p0}");
+ALTER TABLE adl_msg_content_input DROP PARTITION(ds="{p0}");
 
 FROM
 (SELECT 
@@ -10,9 +10,9 @@ FROM
     FROM odl_sms_log
     WHERE ds="{p0}"
     ) t1
-LEFT JOIN  adl_sms_content_input t2
+LEFT JOIN  adl_msg_content_input t2
 ON md5(t1.msg)=t2.msg_id
 WHERE t2.msg_id IS NULL
 ) AS S1
-INSERT INTO adl_sms_content_input PARTITION (ds="{p0}")
+INSERT INTO adl_msg_content_input PARTITION (ds="{p0}")
 SELECT msg_id,msg;

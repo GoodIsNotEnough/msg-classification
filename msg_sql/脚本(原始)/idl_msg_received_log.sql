@@ -1,6 +1,6 @@
-drop table idl_received_msg_log;
+drop table idl_msg_received_log;
 
-CREATE TABLE if not exists idl_received_msg_log
+CREATE TABLE if not exists idl_msg_received_log
 (
 id              STRING COMMENT '短信id',
 mobile_no       STRING COMMENT '手机号',
@@ -15,7 +15,7 @@ ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 STORED AS TEXTFILE;
 
 -- 线上
-ALTER TABLE idl_received_msg_log DROP PARTITION (ds="{p0}");
+ALTER TABLE idl_msg_received_log DROP PARTITION (ds="{p0}");
 
 FROM
   (SELECT t1.id,
@@ -34,11 +34,11 @@ FROM
       FROM odl_sms_log
       WHERE ds="{p0}"
       ) t1
-   LEFT JOIN idl_received_msg_log t2 
+   LEFT JOIN idl_msg_received_log t2 
    ON t1.id=t2.id
    WHERE t2.id IS NULL
    ) AS s
-INSERT INTO idl_received_msg_log PARTITION (ds="{p0}")
+INSERT INTO idl_msg_received_log PARTITION (ds="{p0}")
 SELECT id,
        mobile_no,
        msg_id,
@@ -47,8 +47,8 @@ SELECT id,
        create_time;
 
 -- 初始化
-ALTER TABLE idl_received_msg_log DROP PARTITION(ds="2017-06-22");
-INSERT INTO idl_received_msg_log PARTITION (ds="2017-06-22")
+ALTER TABLE idl_msg_received_log DROP PARTITION(ds="2017-06-22");
+INSERT INTO idl_msg_received_log PARTITION (ds="2017-06-22")
 SELECT
 id,
 mobile_no,

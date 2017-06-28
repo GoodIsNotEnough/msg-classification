@@ -1,5 +1,5 @@
-ALTER TABLE idl_template_score_tmp DROP PARTITION(ds <= "{p0}" );
-INSERT INTO idl_template_score_tmp PARTITION (ds="{p0}")
+ALTER TABLE idl_msg_template_score_tmp DROP PARTITION(ds <= "{p0}" );
+INSERT INTO idl_msg_template_score_tmp PARTITION (ds="{p0}")
 SELECT
 t1.tmp_id,
 t1.signature,
@@ -8,7 +8,7 @@ t1.category,
 t1.score/t2.sum_score AS probability
 FROM 
     (SELECT *
-    FROM idl_template_raw_score_tmp
+    FROM idl_msg_template_raw_score_tmp
     WHERE ds="{p0}" 
     ) t1
 LEFT JOIN 
@@ -16,7 +16,7 @@ LEFT JOIN
     tmp_id,
     dimension,
     sum(score) sum_score
-    FROM idl_template_raw_score_tmp
+    FROM idl_msg_template_raw_score_tmp
     WHERE ds="{p0}"
     GROUP BY tmp_id,dimension
     ) t2

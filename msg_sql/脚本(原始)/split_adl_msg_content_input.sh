@@ -28,7 +28,7 @@ original_path=`pwd`
 cd /data1/shell/split_file/
 
 # 执行程序
-python /data1/shell/split_file/hdfs_main.py adl_sms_content_input ds {p0} 1 /data1/shell/data_tool/sourcedata/msg_cont
+python /data1/shell/split_file/hdfs_main.py adl_msg_content_input ds {p0} 1 /data1/shell/data_tool/sourcedata/msg_cont
 
 # 返回脚本目录
 cd ${original_path}
