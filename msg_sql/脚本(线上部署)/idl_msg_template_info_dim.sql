@@ -11,7 +11,7 @@ type_prob_map,
 tmp_industry,
 industry_prob,
 industry_prob_map
-FROM idl_template_tmp
+FROM idl_msg_template_info_tmp
 WHERE ds = "{p0}"
 UNION ALL
 SELECT
