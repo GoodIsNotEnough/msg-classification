@@ -57,17 +57,26 @@ status,
 receive_code,
 create_time
 FROM
-    (SELECT 
-    MD5(concat_ws("#",task_id,phone_no)) AS id,
-    phone_no AS mobile_no,  
-    MD5(msg) AS msg_id,        
-    status, 
-    receive_code, 
+    (SELECT
+    id,
+    mobile_no,
+    msg_id,
+    status,
+    receive_code,
     create_time,
     row_number() over (PARTITION BY id ORDER BY create_time desc) AS rn
-    FROM odl_sms_log
-    WHERE ds<="2017-07-02"
-    ) t
+    FROM
+        (SELECT 
+        MD5(concat_ws("#",task_id,phone_no)) AS id,
+        phone_no AS mobile_no,  
+        MD5(msg) AS msg_id,        
+        status, 
+        receive_code, 
+        create_time
+        FROM odl_sms_log
+        WHERE ds<="2017-07-02"
+        ) t1
+    ) t2
 WHERE rn=1;
 
 
