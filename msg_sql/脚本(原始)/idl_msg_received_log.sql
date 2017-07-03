@@ -25,7 +25,7 @@ FROM
           t1.receive_code,
           t1.create_time
    FROM
-     (SELECT id,
+     (SELECT MD5(concat_ws("#",task_id,phone_no)) AS id,
              phone_no AS mobile_no,
              MD5(msg) AS msg_id,
              status,
@@ -47,8 +47,8 @@ SELECT id,
        create_time;
 
 -- 初始化
-ALTER TABLE idl_msg_received_log DROP PARTITION(ds="2017-06-22");
-INSERT INTO idl_msg_received_log PARTITION (ds="2017-06-22")
+ALTER TABLE idl_msg_received_log DROP PARTITION(ds="2017-07-02");
+INSERT INTO idl_msg_received_log PARTITION (ds="2017-07-02")
 SELECT
 id,
 mobile_no,
@@ -58,7 +58,7 @@ receive_code,
 create_time
 FROM
     (SELECT 
-    id,
+    MD5(concat_ws("#",task_id,phone_no)) AS id,
     phone_no AS mobile_no,  
     MD5(msg) AS msg_id,        
     status, 
@@ -66,7 +66,7 @@ FROM
     create_time,
     row_number() over (PARTITION BY id ORDER BY create_time desc) AS rn
     FROM odl_sms_log
-    WHERE ds<="2017-06-08"
+    WHERE ds<="2017-07-02"
     ) t
 WHERE rn=1;
 
