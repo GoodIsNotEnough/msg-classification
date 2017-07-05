@@ -1,0 +1,17 @@
+ALTER TABLE adl_sms_content_input RENAME TO adl_msg_content_input;
+ALTER TABLE idl_received_msg_log RENAME TO idl_msg_received_log;
+-- ALTER TABLE split_adl_sms_content_input RENAME TO split_adl_msg_content_input;
+-- ALTER TABLE idl_msg_template_tmp RENAME TO idl_msg_template_tmp;
+-- ALTER TABLE idl_msg_template_dim RENAME TO idl_msg_template_dim;
+-- ALTER TABLE idl_msg_template_ft RENAME TO idl_msg_template_ft;
+ALTER TABLE idl_template_raw_score_tmp RENAME TO idl_msg_template_raw_score_tmp;
+ALTER TABLE idl_template_score_tmp RENAME TO idl_msg_template_score_tmp;
+ALTER TABLE idl_template_tmp  RENAME TO idl_msg_template_info_tmp;
+ALTER TABLE idl_template_dim  RENAME TO idl_msg_template_info_dim;
+ALTER TABLE idl_signature_score_agg  RENAME TO idl_msg_signature_score_agg;
+ALTER TABLE idl_signature_dim RENAME TO idl_msg_signature_info_dim;
+ALTER TABLE idl_received_msg_join_log RENAME TO idl_msg_received_join_log;
+ALTER TABLE idl_sender_info_agg RENAME TO idl_msg_sender_info_agg;
+ALTER TABLE idl_receiver_info_agg RENAME TO idl_msg_receiver_info_agg;
+ALTER TABLE idl_sender_receiver_relationship_agg RENAME TO idl_msg_sender_receiver_relationship_agg;
+ALTER TABLE idl_msg_user_tag_agg RENAME TO idl_msg_receiver_tag_agg;
