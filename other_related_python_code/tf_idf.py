@@ -5,7 +5,11 @@ import sys,math
 import string
 reload(sys)
 sys.setdefaultencoding('utf-8')
-
+'''
+TF:在某类签名中的重要程度
+IDF:对应所有签名而言的独特性,若是计算在所有类中的独特性,可能就没有区分度了
+(因为字可能都在大多数类中均出现，这样计算的IDF数值都差不多大)
+'''
 result_path = os.path.join(os.path.split(os.path.realpath(__file__))[0], "ordered_signature2class.txt")
 try:
     result_fin=open(result_path) #打开文件
